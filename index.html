@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#070b14;margin:0;padding:0">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Limamoulaye Ndiaye - Network &amp; Network Engineer</title>
+<meta property="og:title" content="Limamoulaye Ndiaye - Network &amp; Telecom Engineer">
+<meta property="og:description" content="ISP N2 Consultant - FTTH VoIP IPTV - Dakar Senegal">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070b14;
+  --bg2:#0d1526;
+  --ac:#00d4ff;
+  --ac2:#0055ff;
+  --ac3:#00ff9d;
+  --tx:#e8f0ff;
+  --mu:#6b82a8;
+  --br:rgba(0,212,255,0.15);
+  --mono:'Space Mono',monospace;
+  --title:'Syne',sans-serif;
+  --body:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth;background:#070b14}
+body{
+  background:var(--bg);
+  color:var(--tx);
+  font-family:var(--body);
+  overflow-x:hidden;
+  cursor:none;
+  line-height:1.6;
+  min-height:100vh;
+}
+/* CURSOR */
+#cur{position:fixed;top:0;left:0;z-index:9999;pointer-events:none}
+.cdot{width:8px;height:8px;background:var(--ac);border-radius:50%;position:absolute;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--ac)}
+.cring{width:30px;height:30px;border:1.5px solid rgba(0,212,255,0.5);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width .3s,height .3s}
+/* CANVAS */
+#bg{position:fixed;inset:0;z-index:0;opacity:0.3;pointer-events:none}
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:64px;padding:0 clamp(16px,4vw,56px);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(7,11,20,0.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--br);
+}
+.logo{font-family:var(--mono);font-size:.85rem;color:var(--ac);letter-spacing:.08em;text-decoration:none}
+.logo span{color:var(--mu)}
+.navlinks{display:flex;align-items:center;gap:clamp(12px,2vw,32px);list-style:none}
+.nl{font-family:var(--mono);font-size:.72rem;color:var(--mu);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;position:relative;white-space:nowrap}
+.nl::before{content:attr(data-n);color:var(--ac);margin-right:5px;font-size:.6rem}
+.nl:hover{color:var(--tx)}
+.nl::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.nl:hover::after{transform:scaleX(1)}
+/* LANG TOGGLE */
+.lt{display:flex;align-items:center;background:var(--bg2);border:1px solid var(--br);overflow:hidden}
+.lb{padding:6px 12px;background:transparent;border:none;color:var(--mu);cursor:pointer;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;transition:background .2s,color .2s}
+.lb.on{background:var(--ac);color:var(--bg);font-weight:700}
+.lb:hover:not(.on){color:var(--tx);background:rgba(0,212,255,0.08)}
+.lsep{width:1px;background:var(--br);align-self:stretch}
+/* SECTIONS */
+main{position:relative;z-index:2}
+section{max-width:1100px;margin:0 auto;padding:110px clamp(16px,4vw,56px) 80px}
+/* SECTION HEADER */
+.slabel{font-family:var(--mono);font-size:.68rem;color:var(--ac);letter-spacing:.25em;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.slabel::before{content:'';width:26px;height:1px;background:var(--ac);flex-shrink:0}
+.stitle{font-family:var(--title);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:48px}
+.stitle em{font-style:normal;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:90px;padding-bottom:60px;position:relative}
+.htag{font-family:var(--mono);font-size:.72rem;color:var(--ac);letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:20px;opacity:0;animation:fup .8s .2s forwards}
+.htag::before{content:'';width:34px;height:1px;background:var(--ac);box-shadow:0 0 16px rgba(0,212,255,0.4)}
+.hname{font-family:var(--title);font-size:clamp(2.8rem,7vw,6.5rem);font-weight:800;line-height:.95;letter-spacing:-.02em;margin-bottom:14px;opacity:0;animation:fup .8s .35s forwards}
+.hname .f{display:block;color:var(--tx)}
+.hname .l{display:block;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hrole{font-family:var(--mono);font-size:clamp(.78rem,1.3vw,.95rem);color:var(--mu);margin-bottom:28px;letter-spacing:.04em;opacity:0;animation:fup .8s .5s forwards}
+.hrole .sep{color:var(--ac);margin:0 8px}
+.hbio{max-width:540px;font-size:1rem;line-height:1.78;color:#a0b8d8;margin-bottom:38px;opacity:0;animation:fup .8s .65s forwards}
+.hctas{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fup .8s .8s forwards}
+.btnp{padding:13px 28px;background:var(--ac);color:var(--bg);font-family:var(--mono);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background .2s,box-shadow .2s}
+.btnp:hover{background:#33deff;box-shadow:0 0 28px rgba(0,212,255,0.5)}
+.btno{padding:13px 28px;background:transparent;color:var(--ac);font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ac);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background .2s}
+.btno:hover{background:rgba(0,212,255,0.1)}
+.hscroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fup .8s 1.2s forwards}
+.hscroll span{font-family:var(--mono);font-size:.6rem;color:var(--mu);letter-spacing:.2em;text-transform:uppercase}
+.sline{width:1px;height:42px;background:linear-gradient(to bottom,var(--ac),transparent);animation:sp 2s ease-in-out infinite}
+/* SKILLS */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.scard{background:var(--bg2);border:1px solid var(--br);padding:24px;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);transition:border-color .3s,transform .3s}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac),transparent);opacity:0;transition:opacity .3s}
+.scard:hover{border-color:rgba(0,212,255,0.4);transform:translateY(-4px)}
+.scard:hover::before{opacity:1}
+.sicon{font-size:1.7rem;margin-bottom:12px;display:block}
+.scat{font-family:var(--mono);font-size:.65rem;color:var(--ac);letter-spacing:.15em;text-transform:uppercase;margin-bottom:7px}
+.scard h3{font-family:var(--title);font-size:1.05rem;font-weight:700;margin-bottom:12px}
+.stags{display:flex;flex-wrap:wrap;gap:6px}
+.stag{font-family:var(--mono);font-size:.62rem;padding:3px 9px;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);color:var(--mu);transition:background .2s,color .2s}
+.stag:hover{background:rgba(0,212,255,0.15);color:var(--ac)}
+.sbw{margin-top:12px}
+.sbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.6rem;color:var(--mu);margin-bottom:4px}
+.sbb{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+.sbf{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1);box-shadow:0 0 6px rgba(0,212,255,0.5)}
+/* PROJECTS */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.pcard{background:var(--bg2);border:1px solid var(--br);padding:26px;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);transition:border-color .3s,transform .3s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.pcard::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,0.04),transparent);pointer-events:none;opacity:0;transition:opacity .3s}
+.pcard:hover{border-color:rgba(0,212,255,0.4);transform:translateY(-4px)}
+.pcard:hover::after{opacity:1}
+.ptop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px}
+.pico{font-size:1.8rem;flex-shrink:0}
+.pbadge{font-family:var(--mono);font-size:.58rem;padding:3px 9px;background:rgba(0,255,157,0.07);border:1px solid rgba(0,255,157,0.2);color:var(--ac3)}
+.pcard h3{font-family:var(--title);font-size:1.05rem;font-weight:700;margin-bottom:9px}
+.pdesc{font-size:.87rem;color:#8fa3c2;line-height:1.65;margin-bottom:14px;flex:1}
+.pstack{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.pchip{font-family:var(--mono);font-size:.6rem;padding:3px 8px;background:rgba(0,212,255,0.07);border:1px solid var(--br);color:var(--mu)}
+.plink{font-family:var(--mono);font-size:.66rem;color:var(--ac);letter-spacing:.08em;text-transform:uppercase;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:gap .2s;padding:0}
+.plink:hover{gap:9px}
+/* TIMELINE */
+.tl{position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--ac),rgba(0,212,255,0.04))}
+.tli{position:relative;margin-bottom:46px;opacity:0;transform:translateX(-16px);transition:opacity .6s,transform .6s}
+.tli.vis{opacity:1;transform:translateX(0)}
+.tdot{position:absolute;left:-33px;top:8px;width:10px;height:10px;background:var(--ac);border-radius:50%;box-shadow:0 0 0 4px rgba(0,212,255,0.13),0 0 14px rgba(0,212,255,0.5)}
+.thead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;margin-bottom:5px;gap:8px}
+.trole{font-family:var(--title);font-size:1.1rem;font-weight:700}
+.tdate{font-family:var(--mono);font-size:.68rem;color:var(--ac);padding:3px 10px;border:1px solid var(--br);background:rgba(0,212,255,0.05);white-space:nowrap}
+.tco{font-family:var(--mono);font-size:.74rem;color:var(--mu);margin-bottom:11px}
+.tco span{color:var(--ac3)}
+.ttasks{list-style:none;display:flex;flex-direction:column;gap:7px}
+.ttasks li{font-size:.87rem;color:#8fa3c2;line-height:1.6;padding-left:17px;position:relative}
+.ttasks li::before{content:'>';position:absolute;left:0;color:var(--ac);font-size:.75rem;top:2px;font-family:var(--mono)}
+/* ARTICLES */
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.acard{background:var(--bg2);border:1px solid var(--br);padding:24px;clip-path:polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,0 100%);transition:border-color .3s,transform .3s;display:flex;flex-direction:column;gap:10px}
+.acard:hover{border-color:rgba(0,212,255,0.35);transform:translateY(-3px)}
+.ameta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.adate{font-family:var(--mono);font-size:.62rem;color:var(--mu)}
+.acat{font-family:var(--mono);font-size:.6rem;padding:2px 9px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--ac)}
+.acard h3{font-family:var(--title);font-size:.98rem;font-weight:700;line-height:1.3}
+.aexc{font-size:.85rem;color:#8fa3c2;line-height:1.6;flex:1}
+.aread{font-family:var(--mono);font-size:.65rem;color:var(--ac);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:5px;cursor:pointer;background:none;border:none;transition:gap .2s;padding:0}
+.aread:hover{gap:9px}
+/* MODAL */
+.moverlay{position:fixed;inset:0;z-index:500;background:rgba(7,11,20,0.95);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.moverlay.open{opacity:1;pointer-events:all}
+.mbox{background:var(--bg2);border:1px solid var(--br);max-width:720px;width:100%;max-height:86vh;overflow-y:auto;padding:clamp(20px,4vw,44px);clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%);transform:translateY(18px);transition:transform .3s;position:relative}
+.moverlay.open .mbox{transform:translateY(0)}
+.mclose{position:sticky;top:0;float:right;background:none;border:none;color:var(--mu);font-family:var(--mono);font-size:.72rem;cursor:pointer;padding:4px 8px;transition:color .2s}
+.mclose:hover{color:var(--ac)}
+.mbox h2{font-family:var(--title);font-size:clamp(1.2rem,3vw,1.7rem);font-weight:800;margin-bottom:8px;clear:both}
+.mmeta{font-family:var(--mono);font-size:.63rem;color:var(--mu);margin-bottom:22px;display:flex;gap:14px;flex-wrap:wrap}
+.mbody h3{font-family:var(--title);font-size:1rem;font-weight:700;color:var(--ac);margin:22px 0 8px}
+.mbody p{font-size:.9rem;color:#8fa3c2;line-height:1.78;margin-bottom:11px}
+.mbody code{font-family:var(--mono);font-size:.76rem;background:rgba(0,212,255,0.07);border:1px solid var(--br);padding:2px 7px;color:var(--ac3)}
+.mbody pre{background:#0a1220;border:1px solid var(--br);padding:14px 18px;font-family:var(--mono);font-size:.76rem;color:var(--ac3);line-height:1.6;overflow-x:auto;margin:10px 0 16px;white-space:pre-wrap}
+/* EDUCATION */
+.egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:16px}
+.ecard{background:var(--bg2);border:1px solid var(--br);padding:22px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);transition:border-color .3s}
+.ecard.ft{border-color:rgba(0,212,255,0.35);background:linear-gradient(135deg,rgba(0,212,255,0.05),var(--bg2))}
+.ecard:hover{border-color:rgba(0,212,255,0.4)}
+.ebadge{font-family:var(--mono);font-size:.6rem;padding:2px 9px;background:rgba(0,212,255,0.1);color:var(--ac);border:1px solid rgba(0,212,255,0.25);letter-spacing:.1em;text-transform:uppercase;margin-bottom:13px;display:inline-block}
+.ebadge.cur{background:rgba(0,255,157,0.1);color:var(--ac3);border-color:rgba(0,255,157,0.25)}
+.ecard h3{font-family:var(--title);font-size:.92rem;font-weight:700;line-height:1.3;margin-bottom:6px}
+.eschool{font-family:var(--mono);font-size:.68rem;color:var(--mu);margin-bottom:5px}
+.edate{font-family:var(--mono);font-size:.65rem;color:var(--ac)}
+/* CONTACT */
+#contact{border-top:1px solid var(--br)}
+.clayout{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
+.atxt{font-size:.95rem;line-height:1.8;color:#8fa3c2;margin-bottom:16px}
+.srow{display:flex;gap:26px;flex-wrap:wrap;margin-top:26px}
+.sn{font-family:var(--title);font-size:2rem;font-weight:800;color:var(--ac);line-height:1;margin-bottom:3px}
+.sl{font-family:var(--mono);font-size:.62rem;color:var(--mu);letter-spacing:.1em;text-transform:uppercase}
+.lrow{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.lchip{padding:7px 14px;background:var(--bg2);border:1px solid var(--br);font-family:var(--mono);font-size:.7rem;display:flex;align-items:center;gap:7px}
+.llv{color:var(--ac)}
+.cinfo{display:flex;flex-direction:column;gap:13px}
+.citem{display:flex;align-items:center;gap:13px;padding:13px 16px;background:var(--bg2);border:1px solid var(--br);transition:border-color .3s;text-decoration:none;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.citem:hover{border-color:rgba(0,212,255,0.4)}
+.cico{width:32px;height:32px;background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.clabel{font-family:var(--mono);font-size:.6rem;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.cval{font-size:.87rem;color:var(--tx)}
+/* FOOTER */
+footer{border-top:1px solid var(--br);padding:24px clamp(16px,4vw,56px);position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+footer p{font-family:var(--mono);font-size:.64rem;color:var(--mu)}
+.fa{color:var(--ac)}
+/* TRANSITIONS */
+.blink{animation:blink 1s step-end infinite;color:var(--ac)}
+[data-i]{transition:opacity .18s ease}
+.lsw [data-i]{opacity:0}
+/* ANIMATIONS */
+@keyframes fup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sp{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* RESPONSIVE */
+@media(max-width:860px){.clayout{grid-template-columns:1fr;gap:34px}}
+@media(max-width:600px){nav{padding:0 14px}.navlinks{gap:10px}section{padding:88px 14px 58px}footer{padding:18px 14px;flex-direction:column;text-align:center}}
+@media(max-width:440px){.navlinks li:not(:nth-last-child(-n+2)){display:none}}
+</style>
+</head>
+<body>
+<div id="cur"><div class="cdot"></div><div class="cring"></div></div>
+<canvas id="bg"></canvas>
+<nav>
+  <a href="#hero" class="logo">LLN<span></span></a>
+  <ul class="navlinks">
+    <li><a href="#skills"     class="nl" data-n="01" data-i="nav.sk">Skills</a></li>
+    <li><a href="#projects"   class="nl" data-n="02" data-i="nav.pr">Projects</a></li>
+    <li><a href="#experience" class="nl" data-n="03" data-i="nav.ex">Experience</a></li>
+    <li><a href="#articles"   class="nl" data-n="04" data-i="nav.ar">Articles</a></li>
+    <li><a href="#contact"    class="nl" data-n="05" data-i="nav.co">Contact</a></li>
+    <li><div class="lt"><button class="lb on" id="ben" onclick="setLang('en')">EN</button><div class="lsep"></div><button class="lb" id="bfr" onclick="setLang('fr')">FR</button></div></li>
+  </ul>
+</nav>
+<main>
+<!-- HERO -->
+<section id="hero">
+  <div class="htag" data-i="hero.tag">Network &amp; Telecom Engineer</div>
+  <h1 class="hname"><span class="f">Limamoulaye</span><span class="l">Ndiaye</span></h1>
+  <p class="hrole"><span data-i="hero.role">ISP N2 Consultant</span><span class="sep">//</span>FTTH &middot; VoIP &middot; IPTV<span class="sep">//</span>Dakar<span class="blink">_</span></p>
+  <p class="hbio" data-i="hero.bio">Senior IT Technician specializing in networks and telecommunications. Expert in Level-2 support, fiber optic infrastructure, and systems administration. Currently pursuing a Master&#39;s in Information Systems Engineering at ESMT.</p>
+  <div class="hctas"><a href="#contact" class="btnp" data-i="hero.cta1">Get In Touch</a><a href="#projects" class="btno" data-i="hero.cta2">View Projects</a></div>
+  <div class="hscroll"><span data-i="hero.scroll">Scroll</span><div class="sline"></div></div>
+</section>
+<!-- SKILLS -->
+<section id="skills">
+  <div class="slabel" data-i="sk.lbl">Technical Expertise</div>
+  <h2 class="stitle"><span data-i="sk.t1">Skills &amp; </span><em data-i="sk.t2">Technologies</em></h2>
+  <div class="sgrid">
+    <div class="scard"><span class="sicon">&#127760;</span><div class="scat" data-i="sk1.c">Core Domain</div><h3 data-i="sk1.t">Networks &amp; Telecom</h3><div class="stags"><span class="stag">TCP/IP</span><span class="stag">DHCP</span><span class="stag">DNS</span><span class="stag">VPN</span><span class="stag">FTTH/FTTx</span><span class="stag">Fiber Optic</span><span class="stag">OTDR</span><span class="stag">Cisco</span><span class="stag">VoIP</span><span class="stag">IPTV</span></div><div class="sbw"><div class="sbl"><span data-i="sk.p">Proficiency</span><span>90%</span></div><div class="sbb"><div class="sbf" data-w="90"></div></div></div></div>
+    <div class="scard"><span class="sicon">&#128421;</span><div class="scat" data-i="sk2.c">Infrastructure</div><h3 data-i="sk2.t">Systems &amp; Virtualization</h3><div class="stags"><span class="stag">Windows Server</span><span class="stag">Active Directory</span><span class="stag">GPO</span><span class="stag">VMware</span><span class="stag">Proxmox</span><span class="stag">VirtualBox</span><span class="stag">M365</span><span class="stag">GLPI</span><span class="stag">Asterisk</span></div><div class="sbw"><div class="sbl"><span data-i="sk.p">Proficiency</span><span>82%</span></div><div class="sbb"><div class="sbf" data-w="82"></div></div></div></div>
+    <div class="scard"><span class="sicon">&#128737;</span><div class="scat" data-i="sk3.c">Security</div><h3 data-i="sk3.t">Security &amp; Monitoring</h3><div class="stags"><span class="stag">802.1X</span><span class="stag">RADIUS</span><span class="stag">EAP-TLS</span><span class="stag">Zabbix</span><span class="stag">Nagios</span><span class="stag">Firewall</span><span class="stag">WPA2/WPA3</span><span class="stag">IDS/IPS</span></div><div class="sbw"><div class="sbl"><span data-i="sk.p">Proficiency</span><span>76%</span></div><div class="sbb"><div class="sbf" data-w="76"></div></div></div></div>
+    <div class="scard"><span class="sicon">&#9881;</span><div class="scat" data-i="sk4.c">Tools &amp; Dev</div><h3 data-i="sk4.t">Simulation &amp; Dev</h3><div class="stags"><span class="stag">GNS3</span><span class="stag">Packet Tracer</span><span class="stag">Atoll</span><span class="stag">HFSS/ANSYS</span><span class="stag">MATLAB</span><span class="stag">HTML/CSS/JS</span><span class="stag">PHP</span><span class="stag">Arduino</span></div><div class="sbw"><div class="sbl"><span data-i="sk.p">Proficiency</span><span>70%</span></div><div class="sbb"><div class="sbf" data-w="70"></div></div></div></div>
+  </div>
+</section>
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="slabel" data-i="pr.lbl">Real Work</div>
+  <h2 class="stitle"><span data-i="pr.t1">Featured </span><em data-i="pr.t2">Projects</em></h2>
+  <div class="pgrid">
+    <div class="pcard"><div class="ptop"><span class="pico">&#128225;</span><span class="pbadge" data-i="p1.b">Antenna Design</span></div><h3 data-i="p1.t">Quarter-Wave Dipole Antenna at 5 GHz</h3><p class="pdesc" data-i="p1.d">Designed and simulated a quarter-wave dipole antenna resonating at 5 GHz using ANSYS HFSS. Defined a 15mm radiating element, created the excitation gap, ran a 1-100 GHz frequency sweep, and analyzed radiation pattern, directivity (~10 dBi), beamwidth (~30 deg) and Smith chart impedance matching.</p><div class="pstack"><span class="pchip">ANSYS HFSS</span><span class="pchip">RF Design</span><span class="pchip">MATLAB</span></div><button class="plink" data-i="p.det" onclick="openM('ant')">View Details</button></div>
+    <div class="pcard"><div class="ptop"><span class="pico">&#128274;</span><span class="pbadge" data-i="p2.b">Network Security</span></div><h3 data-i="p2.t">802.1X Network Authentication &amp; Access Control</h3><p class="pdesc" data-i="p2.d">Multi-layer authentication architecture using 802.1X/EAP-TLS with PKI, RADIUS server, MFA via Google Authenticator, automatic VLAN assignment by user profile, and Squid/SquidGuard web proxy filtering with centralized logging.</p><div class="pstack"><span class="pchip">802.1X</span><span class="pchip">RADIUS</span><span class="pchip">EAP-TLS</span><span class="pchip">PKI</span><span class="pchip">MFA</span></div><button class="plink" data-i="p.det" onclick="openM('auth')">View Details</button></div>
+    <div class="pcard"><div class="ptop"><span class="pico">&#127909;</span><span class="pbadge" data-i="p3.b">Self-Hosted</span></div><h3 data-i="p3.t">Jitsi Meet Deployment on Ubuntu Server</h3><p class="pdesc" data-i="p3.d">Full self-hosted Jitsi Meet video conferencing deployment on Ubuntu 22.04. Configured FQDN, Nginx reverse proxy, UFW firewall rules, and generated a Let&#39;s Encrypt TLS certificate for end-to-end encrypted communications.</p><div class="pstack"><span class="pchip">Ubuntu 22.04</span><span class="pchip">Nginx</span><span class="pchip">Let&#39;s Encrypt</span><span class="pchip">UFW</span></div><button class="plink" data-i="p.det" onclick="openM('jit')">View Details</button></div>
+    <div class="pcard"><div class="ptop"><span class="pico">&#129302;</span><span class="pbadge" data-i="p4.b">Embedded Systems</span></div><h3 data-i="p4.t">Arduino PWM Fan Speed Controller</h3><p class="pdesc" data-i="p4.d">PWM-based fan speed regulation using Arduino. Implemented a 31 kHz signal on ATMEGA328, integrated tachometer feedback for RPM measurement, and added a voltage divider circuit to protect microcontroller inputs from 12V fan signals.</p><div class="pstack"><span class="pchip">Arduino</span><span class="pchip">PWM 31kHz</span><span class="pchip">ATMEGA328</span><span class="pchip">Electronics</span></div><button class="plink" data-i="p.det" onclick="openM('ard')">View Details</button></div>
+    <div class="pcard"><div class="ptop"><span class="pico">&#127760;</span><span class="pbadge" data-i="p5.b">Network Lab</span></div><h3 data-i="p5.t">WAN Interconnection Lab &mdash; GNS3</h3><p class="pdesc" data-i="p5.d">Three-site WAN topology (HQ + BRANCH1 + BRANCH2) under GNS3 with VLSM addressing, serial link configuration, dynamic routing, and inter-VLAN routing. Full end-to-end reachability validated across complex subnets.</p><div class="pstack"><span class="pchip">GNS3</span><span class="pchip">Cisco IOS</span><span class="pchip">VLSM</span><span class="pchip">Dynamic Routing</span></div><button class="plink" data-i="p.det" onclick="openM('gns')">View Details</button></div>
+    <div class="pcard"><div class="ptop"><span class="pico">&#128451;</span><span class="pbadge" data-i="p6.b">Database</span></div><h3 data-i="p6.t">Oracle SQL Database Administration</h3><p class="pdesc" data-i="p6.d">Oracle database administration with Professor/Faculty schema, user creation via SYSDBA, complex SQL queries with JOINs, GROUP BY, HAVING, ORDER BY, ALTER TABLE, and full transaction lifecycle with COMMIT.</p><div class="pstack"><span class="pchip">Oracle DB</span><span class="pchip">SQL</span><span class="pchip">SYSDBA</span><span class="pchip">DDL/DML</span></div><button class="plink" data-i="p.det" onclick="openM('ora')">View Details</button></div>
+  </div>
+</section>
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="slabel" data-i="ex.lbl">Career Path</div>
+  <h2 class="stitle"><span data-i="ex.t1">Work </span><em data-i="ex.t2">Experience</em></h2>
+  <div class="tl">
+    <div class="tli"><div class="tdot"></div><div class="thead"><div class="trole" data-i="j1.r">ISP N2 Consultant</div><div class="tdate" data-i="j1.d">Nov. 2025 - Present</div></div><div class="tco">Alten Senegal &mdash; <span data-i="j1.s">Bouygues Telecom Account</span> &middot; Dakar</div><ul class="ttasks"><li data-i="j1.t1">Advanced Level-2 engineering support for Bouygues Telecom subscribers</li><li data-i="j1.t2">Resolution of complex incidents on FTTH, VoIP and IPTV services</li><li data-i="j1.t3">In-depth fiber optic and access network infrastructure diagnosis</li><li data-i="j1.t4">Technical escalation handling with full solution documentation</li></ul></div>
+    <div class="tli"><div class="tdot"></div><div class="thead"><div class="trole" data-i="j2.r">IT Assistant</div><div class="tdate" data-i="j2.d">Aug. - Oct. 2025</div></div><div class="tco">IRESSEF &middot; <span>Diamniadio</span></div><ul class="ttasks"><li data-i="j2.t1">User technical support - hardware, software, network connectivity</li><li data-i="j2.t2">IT asset management, maintenance, workstation configuration</li><li data-i="j2.t3">Active Directory and Microsoft 365 administration</li></ul></div>
+    <div class="tli"><div class="tdot"></div><div class="thead"><div class="trole" data-i="j3.r">Technical Training Intern</div><div class="tdate" data-i="j3.d">Apr. - Jul. 2024</div></div><div class="tco">Sonatel &middot; <span>Dakar</span></div><ul class="ttasks"><li data-i="j3.t1">Study of NFV and SDN technologies</li><li data-i="j3.t2">Technical presentations on 5G infrastructure and telecom evolution</li></ul></div>
+    <div class="tli"><div class="tdot"></div><div class="thead"><div class="trole" data-i="j4.r">IT Intern</div><div class="tdate" data-i="j4.d">Dec. 2023 - Feb. 2024</div></div><div class="tco">African Global Logistics &middot; <span>Dakar</span></div><ul class="ttasks"><li data-i="j4.t1">Helpdesk support and hardware/software troubleshooting</li><li data-i="j4.t2">Windows system and VMware virtual machine deployment</li></ul></div>
+  </div>
+</section>
+<!-- ARTICLES -->
+<section id="articles">
+  <div class="slabel" data-i="ar.lbl">Technical Writing</div>
+  <h2 class="stitle"><span data-i="ar.t1">Technical </span><em data-i="ar.t2">Articles</em></h2>
+  <div class="agrid">
+    <div class="acard"><div class="ameta"><span class="adate">2025</span><span class="acat" data-i="a1.c">Network Security</span></div><h3 data-i="a1.t">How 802.1X Secures Your Network Access</h3><p class="aexc" data-i="a1.e">A deep dive into the 802.1X protocol, EAP-TLS authentication flow, RADIUS configuration, and automatic VLAN assignment - illustrated with a real enterprise deployment.</p><button class="aread" data-i="ar.rd" onclick="openM('aa1')">Read Article</button></div>
+    <div class="acard"><div class="ameta"><span class="adate">2024</span><span class="acat" data-i="a2.c">RF Engineering</span></div><h3 data-i="a2.t">Designing a 5 GHz Dipole Antenna in HFSS</h3><p class="aexc" data-i="a2.e">Step-by-step guide to designing a quarter-wave dipole antenna at 5 GHz in ANSYS HFSS: geometry, gap, mesh, frequency sweep, and reading the Smith chart.</p><button class="aread" data-i="ar.rd" onclick="openM('aa2')">Read Article</button></div>
+    <div class="acard"><div class="ameta"><span class="adate">2024</span><span class="acat" data-i="a3.c">Self-Hosting</span></div><h3 data-i="a3.t">Deploy Jitsi Meet on Ubuntu 22.04 in 7 Steps</h3><p class="aexc" data-i="a3.e">A practical walkthrough for setting up a private Jitsi Meet server: Ubuntu update, FQDN, Nginx, firewall rules, and SSL certificate generation.</p><button class="aread" data-i="ar.rd" onclick="openM('aa3')">Read Article</button></div>
+  </div>
+</section>
+<!-- EDUCATION -->
+<section id="education">
+  <div class="slabel" data-i="ed.lbl">Academic Background</div>
+  <h2 class="stitle"><span data-i="ed.t1">Education &amp; </span><em data-i="ed.t2">Training</em></h2>
+  <div class="egrid">
+    <div class="ecard ft"><div class="ebadge cur" data-i="ed.b1">In Progress</div><h3 data-i="ed.d1">Master&#39;s 1 &mdash; Information Systems Engineering</h3><div class="eschool">ESMT &mdash; Ecole Superieure Multinationale des Telecommunications</div><div class="edate" data-i="ed.y1">Jan. 2026 - Ongoing</div></div>
+    <div class="ecard"><div class="ebadge" data-i="ed.b2">Bachelor&#39;s Pro</div><h3 data-i="ed.d2">Professional Bachelor&#39;s &mdash; Networks &amp; Telecom</h3><div class="eschool">Institut Superieur Informatique (ISI)</div><div class="edate">2023 - 2024</div></div>
+    <div class="ecard"><div class="ebadge" data-i="ed.b3">Bachelor&#39;s</div><h3 data-i="ed.d3">Bachelor&#39;s Yrs 1 &amp; 2 &mdash; Networks &amp; Telecom</h3><div class="eschool">Institut Superieur Informatique (ISI)</div><div class="edate">2021 - 2023</div></div>
+    <div class="ecard"><div class="ebadge" data-i="ed.b4">High School</div><h3 data-i="ed.d4">Scientific Baccalaureate &mdash; Series S</h3><div class="eschool">Lycee Seydina Limamoulaye</div><div class="edate">2018 - 2021</div></div>
+  </div>
+</section>
+<!-- CONTACT -->
+<section id="contact">
+  <div class="slabel" data-i="ct.lbl">Get In Touch</div>
+  <h2 class="stitle"><span data-i="ct.t1">Let&#39;s </span><em data-i="ct.t2">Connect</em></h2>
+  <div class="clayout">
+    <div>
+      <p class="atxt" data-i="ct.b1">Always open to new opportunities in network engineering, telecom infrastructure, or IT consulting. Whether you have a project, a role, or just want to talk tech - reach out.</p>
+      <p class="atxt" data-i="ct.b2">Based in Dakar, Senegal. Available for remote and on-site missions across West Africa and beyond.</p>
+      <div class="srow"><div><div class="sn">3+</div><div class="sl" data-i="ct.s1">Years in Tech</div></div><div><div class="sn">4</div><div class="sl" data-i="ct.s2">Positions Held</div></div><div><div class="sn">N2</div><div class="sl" data-i="ct.s3">Support Level</div></div></div>
+      <div class="lrow"><div class="lchip">&#127467;&#127479; Francais <span class="llv" data-i="ct.lfr">- Natif</span></div><div class="lchip">&#127468;&#127463; English <span class="llv" data-i="ct.len">- Intermediate</span></div></div>
+    </div>
+    <div class="cinfo">
+      <a href="/cdn-cgi/l/email-protection#e28e8b80839191878c868b839b87d4dba2858f838b8ecc818d8f" class="citem"><div class="cico">&#9993;</div><div><div class="clabel" data-i="ct.em">Email</div><div class="cval"><span class="__cf_email__" data-cfemail="7b1712191a08081e151f121a021e4d423b1c161a121755181416">[email&#160;protected]</span></div></div></a>
+      <a href="tel:+221777758435" class="citem"><div class="cico">&#128222;</div><div><div class="clabel" data-i="ct.ph">Phone</div><div class="cval">+221 77 775 84 35</div></div></a>
+      <div class="citem"><div class="cico">&#128205;</div><div><div class="clabel" data-i="ct.lo">Location</div><div class="cval">Camberene 1, Dakar &mdash; Senegal</div></div></div>
+      <div class="citem"><div class="cico">&#127891;</div><div><div class="clabel" data-i="ct.sc">Institution</div><div class="cval">ESMT Dakar &mdash; M1 ISE</div></div></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <p>&#169; 2025 <span class="fa">Limamoulaye Ndiaye</span> &mdash; <span data-i="ft.r">Network &amp; Telecom Engineer</span></p>
+  <p><span data-i="ft.b">Built with precision</span> <span class="fa">//</span> Dakar, Senegal</p>
+</footer>
+<!-- MODAL -->
+<div class="moverlay" id="mov" onclick="closeOut(event)">
+  <div class="mbox" id="mbox">
+    <button class="mclose" onclick="closeM()" data-i="mc">x Close</button>
+    <div id="mc"></div>
+  </div>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+var lang = 'en';
+var T = {
+  "nav.sk":{en:"Skills",fr:"Comp&#233;tences"},
+  "nav.pr":{en:"Projects",fr:"Projets"},
+  "nav.ex":{en:"Experience",fr:"Exp&#233;rience"},
+  "nav.ar":{en:"Articles",fr:"Articles"},
+  "nav.co":{en:"Contact",fr:"Contact"},
+  "hero.tag":{en:"Network & Telecom Engineer",fr:"Ing&#233;nieur R&#233;seaux & T&#233;l&#233;communications"},
+  "hero.role":{en:"ISP N2 Consultant",fr:"Consultant FAI N2"},
+  "hero.bio":{en:"Senior IT Technician specializing in networks and telecommunications. Expert in Level-2 support, fiber optic infrastructure, and systems administration. Currently pursuing a Master's in Information Systems Engineering at ESMT.",fr:"Technicien Sup&#233;rieur sp&#233;cialis&#233; en R&#233;seaux et T&#233;l&#233;communications. Expert en support N2, infrastructure fibre optique et administration syst&#232;mes. Actuellement en Master 1 ISI &#224; l'ESMT."},
+  "hero.cta1":{en:"Get In Touch",fr:"Me Contacter"},
+  "hero.cta2":{en:"View Projects",fr:"Voir les Projets"},
+  "hero.scroll":{en:"Scroll",fr:"D&#233;filer"},
+  "sk.lbl":{en:"Technical Expertise",fr:"Expertise Technique"},
+  "sk.t1":{en:"Skills & ",fr:"Comp&#233;tences & "},
+  "sk.t2":{en:"Technologies",fr:"Technologies"},
+  "sk.p":{en:"Proficiency",fr:"Ma&#238;trise"},
+  "sk1.c":{en:"Core Domain",fr:"Domaine Principal"},
+  "sk1.t":{en:"Networks & Telecom",fr:"R&#233;seaux & T&#233;l&#233;coms"},
+  "sk2.c":{en:"Infrastructure",fr:"Infrastructure"},
+  "sk2.t":{en:"Systems & Virtualization",fr:"Syst&#232;mes & Virtualisation"},
+  "sk3.c":{en:"Security",fr:"S&#233;curit&#233;"},
+  "sk3.t":{en:"Security & Monitoring",fr:"S&#233;curit&#233; & Supervision"},
+  "sk4.c":{en:"Tools & Dev",fr:"Outils & Dev"},
+  "sk4.t":{en:"Simulation & Dev",fr:"Simulation & D&#233;veloppement"},
+  "pr.lbl":{en:"Real Work",fr:"Travaux R&#233;els"},
+  "pr.t1":{en:"Featured ",fr:"Projets "},
+  "pr.t2":{en:"Projects",fr:"R&#233;alis&#233;s"},
+  "p.det":{en:"View Details",fr:"Voir D&#233;tails"},
+  "p1.b":{en:"Antenna Design",fr:"Conception Antenne"},
+  "p1.t":{en:"Quarter-Wave Dipole Antenna at 5 GHz",fr:"Antenne Dip&#244;le Quart d'Onde &#224; 5 GHz"},
+  "p1.d":{en:"Designed and simulated a quarter-wave dipole antenna resonating at 5 GHz using ANSYS HFSS. Defined a 15mm radiating element, created the excitation gap, ran a 1-100 GHz frequency sweep, and analyzed radiation pattern, directivity (~10 dBi), beamwidth (~30 deg) and Smith chart impedance matching.",fr:"Conception et simulation d'une antenne dip&#244;le quart d'onde r&#233;sonant &#224; 5 GHz sous ANSYS HFSS. &#201;l&#233;ment rayonnant 15mm, gap d'excitation, balayage 1-100 GHz, analyse du diagramme de rayonnement, directivit&#233; (~10 dBi) et adaptation d'imp&#233;dance."},
+  "p2.b":{en:"Network Security",fr:"S&#233;curit&#233; R&#233;seau"},
+  "p2.t":{en:"802.1X Network Authentication & Access Control",fr:"Authentification R&#233;seau 802.1X & Contr&#244;le d'Acc&#232;s"},
+  "p2.d":{en:"Multi-layer authentication architecture using 802.1X/EAP-TLS with PKI, RADIUS server, MFA via Google Authenticator, automatic VLAN assignment by user profile, and Squid/SquidGuard web proxy filtering with centralized logging.",fr:"Architecture d'authentification multicouche avec 802.1X/EAP-TLS, PKI, RADIUS, MFA via Google Authenticator, assignation automatique de VLANs et filtrage web Squid/SquidGuard."},
+  "p3.b":{en:"Self-Hosted",fr:"Auto-H&#233;bergement"},
+  "p3.t":{en:"Jitsi Meet Deployment on Ubuntu Server",fr:"D&#233;ploiement Jitsi Meet sur Ubuntu Server"},
+  "p3.d":{en:"Full self-hosted Jitsi Meet video conferencing deployment on Ubuntu 22.04. Configured FQDN, Nginx reverse proxy, UFW firewall rules, and generated a Let's Encrypt TLS certificate for end-to-end encrypted communications.",fr:"D&#233;ploiement complet de Jitsi Meet auto-h&#233;berg&#233; sur Ubuntu 22.04. FQDN, Nginx reverse proxy, r&#232;gles pare-feu UFW, et certificat TLS Let's Encrypt."},
+  "p4.b":{en:"Embedded Systems",fr:"Syst&#232;mes Embarqu&#233;s"},
+  "p4.t":{en:"Arduino PWM Fan Speed Controller",fr:"R&#233;gulateur de Vitesse Ventilateur PWM avec Arduino"},
+  "p4.d":{en:"PWM-based fan speed regulation using Arduino. Implemented a 31 kHz signal on ATMEGA328, integrated tachometer feedback for RPM measurement, and added a voltage divider circuit to protect microcontroller inputs from 12V fan signals.",fr:"R&#233;gulation de vitesse par PWM avec Arduino. Signal &#224; 31 kHz sur ATMEGA328, retour tachy&#233;trique pour mesure RPM, diviseur de tension pour protection des entr&#233;es microcontr&#244;leur."},
+  "p5.b":{en:"Network Lab",fr:"Labo R&#233;seau"},
+  "p5.t":{en:"WAN Interconnection Lab - GNS3",fr:"TP Interconnexion WAN - GNS3"},
+  "p5.d":{en:"Three-site WAN topology (HQ + BRANCH1 + BRANCH2) under GNS3 with VLSM addressing, serial link configuration, dynamic routing, and inter-VLAN routing. Full end-to-end reachability validated across complex subnets.",fr:"Topologie WAN trois sites sous GNS3 avec adressage VLSM, liens s&#233;rie, routage dynamique et inter-VLAN. Connectivit&#233; bout-en-bout valid&#233;e."},
+  "p6.b":{en:"Database",fr:"Base de Donn&#233;es"},
+  "p6.t":{en:"Oracle SQL Database Administration",fr:"Administration Oracle SQL"},
+  "p6.d":{en:"Oracle database administration with Professor/Faculty schema, user creation via SYSDBA, complex SQL queries with JOINs, GROUP BY, HAVING, ORDER BY, ALTER TABLE, and full transaction lifecycle with COMMIT.",fr:"Administration Oracle avec sch&#233;ma Professeur/Facult&#233;, cr&#233;ation utilisateurs SYSDBA, requ&#234;tes SQL complexes avec jointures, GROUP BY, HAVING, ORDER BY, ALTER TABLE et COMMIT."},
+  "ex.lbl":{en:"Career Path",fr:"Parcours Professionnel"},
+  "ex.t1":{en:"Work ",fr:"Exp&#233;rience "},
+  "ex.t2":{en:"Experience",fr:"Professionnelle"},
+  "j1.r":{en:"ISP N2 Consultant",fr:"Consultant FAI N2"},
+  "j1.d":{en:"Nov. 2025 - Present",fr:"Nov. 2025 - Pr&#233;sent"},
+  "j1.s":{en:"Bouygues Telecom Account",fr:"Compte Bouygues Telecom"},
+  "j1.t1":{en:"Advanced Level-2 engineering support for Bouygues Telecom subscribers",fr:"Support engineering avanc&#233; pour les clients Bouygues Telecom (niveau 2)"},
+  "j1.t2":{en:"Resolution of complex incidents on FTTH, VoIP and IPTV services",fr:"R&#233;solution d'incidents complexes sur FTTH, VoIP et IPTV"},
+  "j1.t3":{en:"In-depth fiber optic and access network infrastructure diagnosis",fr:"Diagnostic approfondi des infrastructures fibre optique et r&#233;seaux d'acc&#232;s"},
+  "j1.t4":{en:"Technical escalation handling with full solution documentation",fr:"Traitement des escalades techniques avec documentation des solutions"},
+  "j2.r":{en:"IT Assistant",fr:"Assistant IT"},
+  "j2.d":{en:"Aug. - Oct. 2025",fr:"Ao&#251;t - Oct. 2025"},
+  "j2.t1":{en:"User technical support - hardware, software, network connectivity",fr:"Support technique utilisateurs - mat&#233;riel, logiciels, r&#233;seau"},
+  "j2.t2":{en:"IT asset management, maintenance, workstation configuration",fr:"Gestion et maintenance du parc informatique"},
+  "j2.t3":{en:"Active Directory and Microsoft 365 administration",fr:"Administration Active Directory et Microsoft 365"},
+  "j3.r":{en:"Technical Training Intern",fr:"Stagiaire P&#233;dagogique"},
+  "j3.d":{en:"Apr. - Jul. 2024",fr:"Avr. - Juil. 2024"},
+  "j3.t1":{en:"Study of NFV and SDN technologies",fr:"Etude des technologies NFV et SDN"},
+  "j3.t2":{en:"Technical presentations on 5G infrastructure and telecom evolution",fr:"Pr&#233;sentations techniques sur la 5G et l'&#233;volution des r&#233;seaux t&#233;l&#233;coms"},
+  "j4.r":{en:"IT Intern",fr:"Stagiaire IT"},
+  "j4.d":{en:"Dec. 2023 - Feb. 2024",fr:"D&#233;c. 2023 - F&#233;v. 2024"},
+  "j4.t1":{en:"Helpdesk support and hardware/software troubleshooting",fr:"Support helpdesk et d&#233;pannage mat&#233;riel/logiciel"},
+  "j4.t2":{en:"Windows system and VMware virtual machine deployment",fr:"D&#233;ploiement syst&#232;mes Windows et machines virtuelles VMware"},
+  "ar.lbl":{en:"Technical Writing",fr:"R&#233;daction Technique"},
+  "ar.t1":{en:"Technical ",fr:"Articles "},
+  "ar.t2":{en:"Articles",fr:"Techniques"},
+  "ar.rd":{en:"Read Article",fr:"Lire l'Article"},
+  "a1.c":{en:"Network Security",fr:"S&#233;curit&#233; R&#233;seau"},
+  "a1.t":{en:"How 802.1X Secures Your Network Access",fr:"Comment le 802.1X S&#233;curise l'Acc&#232;s R&#233;seau"},
+  "a1.e":{en:"A deep dive into the 802.1X protocol, EAP-TLS authentication flow, RADIUS configuration, and automatic VLAN assignment - illustrated with a real enterprise deployment.",fr:"Plonge dans le protocole 802.1X, le flux EAP-TLS, la configuration RADIUS et l'assignation automatique de VLANs."},
+  "a2.c":{en:"RF Engineering",fr:"Ing&#233;nierie RF"},
+  "a2.t":{en:"Designing a 5 GHz Dipole Antenna in HFSS",fr:"Concevoir une Antenne Dip&#244;le 5 GHz sous HFSS"},
+  "a2.e":{en:"Step-by-step guide to designing a quarter-wave dipole antenna at 5 GHz in ANSYS HFSS: geometry, gap, mesh, frequency sweep, and reading the Smith chart.",fr:"Guide pas-&#224;-pas pour concevoir une antenne dip&#244;le quart d'onde &#224; 5 GHz sous ANSYS HFSS."},
+  "a3.c":{en:"Self-Hosting",fr:"Auto-H&#233;bergement"},
+  "a3.t":{en:"Deploy Jitsi Meet on Ubuntu 22.04 in 7 Steps",fr:"D&#233;ployer Jitsi Meet sur Ubuntu 22.04 en 7 &#201;tapes"},
+  "a3.e":{en:"A practical walkthrough for setting up a private Jitsi Meet server: Ubuntu update, FQDN, Nginx, firewall rules, and SSL certificate generation.",fr:"Guide pratique pour installer un serveur Jitsi Meet priv&#233; : Ubuntu, FQDN, Nginx, pare-feu et SSL."},
+  "ed.lbl":{en:"Academic Background",fr:"Parcours Acad&#233;mique"},
+  "ed.t1":{en:"Education & ",fr:"Formation & "},
+  "ed.t2":{en:"Training",fr:"Dipl&#244;mes"},
+  "ed.b1":{en:"In Progress",fr:"En cours"},
+  "ed.d1":{en:"Master's 1 - Information Systems Engineering",fr:"Master 1 - Ing&#233;nierie des Syst&#232;mes d'Information"},
+  "ed.y1":{en:"Jan. 2026 - Ongoing",fr:"Janv. 2026 - En cours"},
+  "ed.b2":{en:"Bachelor's Pro",fr:"Licence Pro"},
+  "ed.d2":{en:"Professional Bachelor's - Networks & Telecom",fr:"Licence Professionnelle - R&#233;seaux et T&#233;l&#233;coms"},
+  "ed.b3":{en:"Bachelor's",fr:"Licence"},
+  "ed.d3":{en:"Bachelor's Yrs 1 & 2 - Networks & Telecom",fr:"Licence 1 & 2 - R&#233;seaux et T&#233;l&#233;communications"},
+  "ed.b4":{en:"High School",fr:"Baccalaur&#233;at"},
+  "ed.d4":{en:"Scientific Baccalaureate - Series S",fr:"Baccalaur&#233;at Scientifique - S&#233;rie S"},
+  "ct.lbl":{en:"Get In Touch",fr:"Me Contacter"},
+  "ct.t1":{en:"Let's ",fr:"Restons en "},
+  "ct.t2":{en:"Connect",fr:"Contact"},
+  "ct.b1":{en:"Always open to new opportunities in network engineering, telecom infrastructure, or IT consulting. Whether you have a project, a role, or just want to talk tech - reach out.",fr:"Toujours ouvert &#224; de nouvelles opportunit&#233;s en ing&#233;nierie r&#233;seau, t&#233;l&#233;coms ou conseil IT."},
+  "ct.b2":{en:"Based in Dakar, Senegal. Available for remote and on-site missions across West Africa and beyond.",fr:"Bas&#233; &#224; Dakar, S&#233;n&#233;gal. Disponible en remote et pour des missions sur site en Afrique de l'Ouest."},
+  "ct.s1":{en:"Years in Tech",fr:"Ans dans la Tech"},
+  "ct.s2":{en:"Positions Held",fr:"Postes Occup&#233;s"},
+  "ct.s3":{en:"Support Level",fr:"Niveau Support"},
+  "ct.lfr":{en:"- Native",fr:"- Natif"},
+  "ct.len":{en:"- Intermediate",fr:"- Interm&#233;diaire"},
+  "ct.em":{en:"Email",fr:"E-mail"},
+  "ct.ph":{en:"Phone",fr:"T&#233;l&#233;phone"},
+  "ct.lo":{en:"Location",fr:"Localisation"},
+  "ct.sc":{en:"Institution",fr:"Etablissement"},
+  "ft.r":{en:"Network & Telecom Engineer",fr:"Ing&#233;nieur R&#233;seaux & T&#233;l&#233;coms"},
+  "ft.b":{en:"Built with precision",fr:"Con&#231;u avec pr&#233;cision"},
+  "mc":{en:"x Close",fr:"x Fermer"}
+};
+function setLang(l){
+  lang=l;
+  // Fade out
+  document.body.classList.add('lsw');
+  setTimeout(function(){
+    // Update every translated element
+    document.querySelectorAll('[data-i]').forEach(function(el){
+      var k=el.getAttribute('data-i');
+      if(T[k]&&T[k][l]){
+        // Use textContent for most elements, innerHTML only if value contains &
+        var val=T[k][l];
+        if(val.indexOf('&')!==-1||val.indexOf('<')!==-1){
+          el.innerHTML=val;
+        } else {
+          el.textContent=val;
+        }
+      }
+    });
+    document.documentElement.lang=l;
+    // Update toggle button states
+    document.getElementById('ben').className='lb'+(l==='en'?' on':'');
+    document.getElementById('bfr').className='lb'+(l==='fr'?' on':'');
+    // Fade back in
+    document.body.classList.remove('lsw');
+  },180);
+}
+var MD = {
+  ant:{
+    en:{t:"Quarter-Wave Dipole Antenna at 5 GHz",m:"RF Engineering - ANSYS HFSS - 2024",
+    b:"<h3>Objective</h3><p>Design and simulate a resonant dipole antenna at 5 GHz using ANSYS HFSS electromagnetic simulation software.</p><h3>Design Parameters</h3><p>At 5 GHz, the wavelength = c/f = 60 mm, making the quarter-wave element 15 mm. The radiating element was modeled as a cylinder on the Z-axis with height 15 mm.</p><h3>Gap Creation</h3><p>An excitation gap of 1 mm was created at the feed point by subtracting a duplicate cylinder. The gap section defines the lumped port where the signal source connects.</p><h3>Simulation</h3><p>An interpolating frequency sweep from 1 GHz to 100 GHz with 451 data points. Mesh, boundaries, and excitations were validated before running.</p><h3>Results</h3><p>Omnidirectional radiation pattern with directivity ~10 dBi and beamwidth ~30 degrees. The Smith chart confirmed low reflection loss with impedance close to 50 ohm.</p>"},
+    fr:{t:"Antenne Dipole Quart d'Onde a 5 GHz",m:"Ingenierie RF - ANSYS HFSS - 2024",
+    b:"<h3>Objectif</h3><p>Conception et simulation d'une antenne dipole resonante a 5 GHz sous ANSYS HFSS.</p><h3>Parametres</h3><p>A 5 GHz, longueur d'onde = 60 mm, element quart d'onde = 15 mm. Modelise comme un cylindre sur l'axe Z.</p><h3>Gap d'excitation</h3><p>Gap de 1 mm cree par soustraction d'un cylindre duplique. La section du gap definit le port localise.</p><h3>Simulation</h3><p>Balayage par interpolation de 1 GHz a 100 GHz, 451 points. Validation du maillage et des conditions aux limites.</p><h3>Resultats</h3><p>Diagramme omnidirectionnel, directivite ~10 dBi, largeur de faisceau ~30 degres. Adaptation d'impedance proche de 50 ohm confirmee sur le diagramme de Smith.</p>"}
+  },
+  auth:{
+    en:{t:"802.1X Network Authentication & Access Control",m:"Network Security - 802.1X/RADIUS/EAP-TLS - 2025",
+    b:"<h3>Problem</h3><p>How to implement robust, scalable network authentication with strong user/device auth, MFA, VLAN assignment by profile, and web traffic filtering?</p><h3>Architecture</h3><p>The 802.1X supplicant-authenticator-server model: clients connect to a managed switch which forwards authentication to a RADIUS server via EAP over RADIUS.</p><h3>EAP-TLS Flow</h3><p>1. Client connects. 2. Switch initiates 802.1X challenge. 3. Mutual certificate exchange via EAP-TLS. 4. RADIUS grants access and pushes VLAN attribute. 5. Switch assigns client to correct VLAN dynamically.</p><h3>MFA</h3><p>Google Authenticator integrated as TOTP second factor. Users present both their certificate and a 6-digit OTP code.</p><h3>Web Filtering</h3><p>Squid transparent proxy with SquidGuard managing policies by user group, blocking unauthorized content and logging all requests for audit.</p>"},
+    fr:{t:"Authentification Reseau 802.1X et Controle d'Acces",m:"Securite Reseau - 802.1X/RADIUS/EAP-TLS - 2025",
+    b:"<h3>Problematique</h3><p>Deploiement d'une solution d'authentification robuste avec auth forte, MFA, assignation VLANs par profil et filtrage web.</p><h3>Architecture</h3><p>Modele supplicant-authentificateur-serveur du 802.1X. Le switch relaie les requetes vers le RADIUS via EAP over RADIUS.</p><h3>Flux EAP-TLS</h3><p>1. Connexion client. 2. Challenge 802.1X. 3. Echange mutuel de certificats. 4. RADIUS accorde l'acces et pousse l'attribut VLAN. 5. Switch assigne dynamiquement le VLAN.</p><h3>MFA</h3><p>Google Authenticator en second facteur TOTP. Certificat + code OTP a 6 chiffres requis.</p><h3>Filtrage Web</h3><p>Squid en proxy transparent avec SquidGuard. Blocage des categories non autorisees, journalisation complete.</p>"}
+  },
+  jit:{
+    en:{t:"Jitsi Meet Deployment on Ubuntu Server",m:"Self-Hosting - Ubuntu 22.04 - Nginx - 2024",
+    b:"<h3>Overview</h3><p>Full deployment of a private self-hosted Jitsi Meet instance on Ubuntu 22.04. Video and audio streams never pass through third-party servers.</p><h3>Step 1 - Update</h3><pre>sudo apt update && sudo apt upgrade
+sudo apt install wget</pre><h3>Step 2 - FQDN</h3><pre>sudo hostnamectl set-hostname jitsi.example.com
+sudo nano /etc/hosts
+# add: x.x.x.x jitsi.example.com</pre><h3>Step 3 - Jitsi GPG Key</h3><pre>curl https://download.jitsi.org/jitsi-key.gpg.key -o jitsi-key.gpg.key
+sudo gpg --output /usr/share/keyrings/jitsi-key.gpg --dearmor jitsi-key.gpg.key</pre><h3>Step 4 - Nginx</h3><pre>sudo apt install nginx-full
+sudo systemctl enable --now nginx.service</pre><h3>Step 5 - Jitsi Meet</h3><pre>sudo apt install jitsi-meet</pre><h3>Step 6 - Firewall</h3><pre>sudo ufw allow 80/tcp && sudo ufw allow 443/tcp
+sudo ufw allow 10000/udp && sudo ufw allow 3478/udp</pre><h3>Step 7 - TLS</h3><pre>sudo apt install certbot
+sudo /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh</pre>"},
+    fr:{t:"Deploiement Jitsi Meet sur Ubuntu Server",m:"Auto-hebergement - Ubuntu 22.04 - Nginx - 2024",
+    b:"<h3>Vue d'ensemble</h3><p>Deploiement complet d'une instance Jitsi Meet privee sur Ubuntu 22.04. Les flux audio/video ne transitent pas par des serveurs tiers.</p><h3>Etape 1 - Mise a jour</h3><pre>sudo apt update && sudo apt upgrade
+sudo apt install wget</pre><h3>Etape 2 - FQDN</h3><pre>sudo hostnamectl set-hostname jitsi.example.com
+sudo nano /etc/hosts
+# ajouter: x.x.x.x jitsi.example.com</pre><h3>Etape 3 - Cle GPG</h3><pre>curl https://download.jitsi.org/jitsi-key.gpg.key -o jitsi-key.gpg.key</pre><h3>Etape 4 - Nginx</h3><pre>sudo apt install nginx-full</pre><h3>Etape 5 - Jitsi Meet</h3><pre>sudo apt install jitsi-meet</pre><h3>Etape 6 - Pare-feu</h3><pre>sudo ufw allow 80/tcp && sudo ufw allow 443/tcp
+sudo ufw allow 10000/udp</pre><h3>Etape 7 - TLS</h3><pre>sudo /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh</pre>"}
+  },
+  ard:{
+    en:{t:"Arduino PWM Fan Speed Controller",m:"Embedded Systems - Arduino/ATMEGA328 - 2023",
+    b:"<h3>Context</h3><p>Speed regulation of a noisy power supply fan using PWM with Arduino, covering all three fan types.</p><h3>Fan Types</h3><p>2-pin fans: GND + 12V only. 3-pin fans: add tachometer output (Hall effect). 4-pin fans: add dedicated PWM input with internal drive - ideal for microcontroller control.</p><h3>PWM Frequency</h3><p>Intel spec defines 25 kHz. On ATMEGA328, pins D3/D9/D10/D11 can output 31 kHz by modifying the timer prescaler.</p><pre>// Timer1 for ~31kHz on pins 9/10
+TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);
+TCCR1B = _BV(WGM13) | _BV(CS10);
+ICR1 = 511;</pre><h3>Tachometer Protection</h3><p>The tachometer signal is 12V - too high for a 5V Arduino. A resistor divider (10k + 10k) reduces it to a safe level and prevents the PWM pin from floating at startup.</p><h3>Results</h3><p>Most 4-pin fans start at >= 40% duty cycle and stop below 30%. At 0%, a 4-pin fan continues at its minimum speed internally - a safety feature unavailable with 2/3-pin fans.</p>"},
+    fr:{t:"Regulateur de Vitesse Ventilateur PWM Arduino",m:"Systemes Embarques - Arduino/ATMEGA328 - 2023",
+    b:"<h3>Contexte</h3><p>Regulation de vitesse d'un ventilateur bruyant par PWM avec Arduino, couvrant les trois types de ventilateurs.</p><h3>Types de ventilateurs</h3><p>2 broches: GND + 12V. 3 broches: ajout tachymetre (effet Hall). 4 broches: entree PWM dediee avec electronique interne - ideal pour microcontroleur.</p><h3>Frequence PWM</h3><p>Standard Intel: 25 kHz. Sur ATMEGA328, pins D3/D9/D10/D11 configurables a 31 kHz.</p><pre>// Timer1 pour ~31kHz sur pins 9/10
+TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);
+TCCR1B = _BV(WGM13) | _BV(CS10);
+ICR1 = 511;</pre><h3>Protection tachymetre</h3><p>Signal tachymetre a 12V. Diviseur resistif (10k + 10k) ramene le signal a 5V pour proteger l'Arduino.</p><h3>Resultats</h3><p>La plupart des ventilateurs 4 broches demarrent a >= 40% et s'arretent sous 30%. A 0%, ils continuent a leur vitesse minimale interne.</p>"}
+  },
+  gns:{
+    en:{t:"WAN Interconnection Lab - GNS3",m:"Network Lab - Cisco IOS - GNS3 - 2024",
+    b:"<h3>Topology</h3><p>Three-site WAN: HQ + BRANCH1 + BRANCH2 interconnected via serial WAN links simulating a real enterprise network.</p><h3>VLSM Addressing</h3><p>HQ LAN: 172.16.0.0/24 - BRANCH1 LAN: 172.16.1.0/24 - BRANCH2 LAN: 172.16.2.0/24. WAN serial links use /28 subnets (255.255.255.240): HQ-B1: 192.168.1.16/28, HQ-B2: 192.168.1.24/28, B1-B2: 192.168.1.32/28. Loopback on HQ: 209.165.200.225/30.</p><h3>Configuration</h3><p>Each router configured with IP on Fa0/0 (LAN) and S0/0/0, S0/0/1 (WAN serial). Clock rates set on DCE ends. Dynamic routing propagates all subnets automatically.</p><h3>Validation</h3><p>Full ping reachability between all LAN hosts across all three sites including the loopback. Routing tables verified for correct propagation and no routing loops.</p>"},
+    fr:{t:"TP Interconnexion WAN - GNS3",m:"Labo Reseau - Cisco IOS - GNS3 - 2024",
+    b:"<h3>Topologie</h3><p>WAN trois sites: HQ + BRANCH1 + BRANCH2 interconnectes par des liens serie simulant un reseau d'entreprise reel.</p><h3>Adressage VLSM</h3><p>LAN HQ: 172.16.0.0/24 - LAN BRANCH1: 172.16.1.0/24 - LAN BRANCH2: 172.16.2.0/24. Liens WAN en /28: HQ-B1: 192.168.1.16/28, HQ-B2: 192.168.1.24/28. Loopback HQ: 209.165.200.225/30.</p><h3>Configuration</h3><p>Adressage sur Fa0/0 (LAN) et S0/0/0, S0/0/1 (liens serie). Clock rates sur extremites DCE. Routage dynamique pour propagation automatique.</p><h3>Validation</h3><p>Connectivite ping entre tous les hotes des trois sites. Tables de routage verifiees, aucune boucle.</p>"}
+  },
+  ora:{
+    en:{t:"Oracle SQL Database Administration",m:"Database - Oracle - SQL - 2024",
+    b:"<h3>Setup</h3><pre>CREATE USER joel IDENTIFIED BY password;
+GRANT ALL PRIVILEGES TO joel;
+CONNECT joel/password;</pre><h3>Schema</h3><pre>CREATE TABLE FACULTE (
+  idfact NUMBER PRIMARY KEY,
+  nomfac VARCHAR2(50),
+  capacite NUMBER
+);
+CREATE TABLE PROFESSEUR (
+  id NUMBER PRIMARY KEY,
+  nom VARCHAR2(50), prenom VARCHAR2(50),
+  naissance DATE, grade VARCHAR2(30),
+  salaire NUMBER,
+  idfact NUMBER REFERENCES FACULTE(idfact)
+);</pre><h3>Key Queries</h3><pre>-- Professors with salary > 800000
+SELECT * FROM PROFESSEUR WHERE salaire > 800000;
+
+-- Count per faculty
+SELECT idfact, COUNT(*) FROM PROFESSEUR GROUP BY idfact;
+
+-- Faculty with more than 3 professors
+SELECT idfact, COUNT(*) FROM PROFESSEUR
+GROUP BY idfact HAVING COUNT(*) > 3;
+
+-- Join with capacity filter
+SELECT p.nom, p.prenom, f.nomfac, f.capacite
+FROM PROFESSEUR p JOIN FACULTE f ON p.idfact=f.idfact
+WHERE f.capacite BETWEEN 100 AND 200
+ORDER BY p.nom;
+
+ALTER TABLE PROFESSEUR ADD (Prime NUMBER);
+COMMIT;</pre>"},
+    fr:{t:"Administration Oracle SQL",m:"Base de donnees - Oracle - SQL - 2024",
+    b:"<h3>Configuration</h3><pre>CREATE USER joel IDENTIFIED BY password;
+GRANT ALL PRIVILEGES TO joel;
+CONNECT joel/password;</pre><h3>Schema</h3><pre>CREATE TABLE FACULTE (
+  idfact NUMBER PRIMARY KEY,
+  nomfac VARCHAR2(50),
+  capacite NUMBER
+);
+CREATE TABLE PROFESSEUR (
+  id NUMBER PRIMARY KEY,
+  nom VARCHAR2(50), prenom VARCHAR2(50),
+  naissance DATE, grade VARCHAR2(30),
+  salaire NUMBER,
+  idfact NUMBER REFERENCES FACULTE(idfact)
+);</pre><h3>Requetes cles</h3><pre>-- Professeurs salaire > 800000
+SELECT * FROM PROFESSEUR WHERE salaire > 800000;
+
+-- Compter par faculte
+SELECT idfact, COUNT(*) FROM PROFESSEUR GROUP BY idfact;
+
+-- Facultes avec plus de 3 profs
+SELECT idfact, COUNT(*) FROM PROFESSEUR
+GROUP BY idfact HAVING COUNT(*) > 3;
+
+-- Jointure avec filtre capacite
+SELECT p.nom, p.prenom, f.nomfac, f.capacite
+FROM PROFESSEUR p JOIN FACULTE f ON p.idfact=f.idfact
+WHERE f.capacite BETWEEN 100 AND 200
+ORDER BY p.nom;
+
+ALTER TABLE PROFESSEUR ADD (Prime NUMBER);
+COMMIT;</pre>"}
+  },
+  aa1:{
+    en:{t:"How 802.1X Secures Your Network Access",m:"Network Security - 802.1X - EAP-TLS - RADIUS",
+    b:"<h3>What is 802.1X?</h3><p>802.1X is an IEEE standard for port-based network access control. Before a device is allowed onto the network, it must prove its identity to an authentication server. This is fundamentally different from simply having the Wi-Fi password.</p><h3>The Three Actors</h3><p>The model involves three parties: the Supplicant (the client device), the Authenticator (the switch or access point that enforces the policy), and the Authentication Server (the RADIUS server that validates credentials).</p><h3>Why EAP-TLS is the Gold Standard</h3><p>EAP-TLS uses mutual certificate-based authentication. Both the client and server present a valid certificate signed by a trusted CA. This eliminates password-based attacks entirely - there is no password to steal or phish.</p><h3>Dynamic VLAN Assignment</h3><p>Once a user authenticates, the RADIUS server sends a VLAN attribute. The switch automatically places the port into the correct VLAN - isolating employees from guests, finance from engineering - without any manual per-device configuration.</p><h3>Adding MFA</h3><p>A TOTP second factor can be added alongside EAP-TLS. The user presents both a device certificate and a time-valid 6-digit code. Even if the certificate is compromised, the attacker cannot authenticate without the second factor.</p>"},
+    fr:{t:"Comment le 802.1X Securise l'Acces Reseau",m:"Securite Reseau - 802.1X - EAP-TLS - RADIUS",
+    b:"<h3>Qu'est-ce que le 802.1X?</h3><p>Le 802.1X est une norme IEEE pour le controle d'acces reseau base sur les ports. Avant qu'un appareil soit autorise sur le reseau, il doit prouver son identite. C'est fondamentalement different de simplement connaitre le mot de passe Wi-Fi.</p><h3>Les trois acteurs</h3><p>Supplicant (l'appareil client), Authentificateur (le switch ou AP qui applique la politique), et Serveur d'authentification (le serveur RADIUS).</p><h3>Pourquoi EAP-TLS est la reference</h3><p>EAP-TLS utilise une authentification mutuelle par certificats. Client et serveur presentent tous deux un certificat valide signe par une AC de confiance. Cela elimine completement les attaques par mot de passe.</p><h3>Assignation dynamique de VLANs</h3><p>Une fois authentifie, le RADIUS envoie un attribut VLAN. Le switch place automatiquement le port dans le bon VLAN sans configuration manuelle par appareil.</p><h3>Ajout du MFA</h3><p>Un second facteur TOTP peut etre ajoute. Certificat + code OTP a 6 chiffres. Meme si le certificat est compromis, l'attaquant ne peut pas s'authentifier sans le second facteur.</p>"}
+  },
+  aa2:{
+    en:{t:"Designing a 5 GHz Dipole Antenna in HFSS",m:"RF Engineering - ANSYS HFSS - Electromagnetics",
+    b:"<h3>Why 5 GHz?</h3><p>The 5 GHz band is used by Wi-Fi 5 (802.11ac) and Wi-Fi 6 (802.11ax). Designing antennas for this band is a valuable skill in wireless network engineering and modern telecom.</p><h3>The Quarter-Wave Principle</h3><p>A quarter-wave dipole resonates when its length equals lambda/4. At 5 GHz, lambda = c/f = 60 mm, so the element is 15 mm. At resonance, the antenna impedance is purely resistive, minimizing reflected power.</p><h3>Modeling in HFSS</h3><p>The antenna is a cylinder on the Z-axis. A 1mm excitation gap at the base is created by subtracting a duplicate cylinder, then extracting its cross-section to define the lumped port - the signal source connection point.</p><h3>Reading Results</h3><p>The radiation pattern shows directional gain distribution - a classic toroidal shape for a dipole. The Smith chart maps complex impedance: a point at the center means perfect 50-ohm matching. The S11 parameter (return loss) should be below -10 dB at resonance for a well-matched antenna.</p>"},
+    fr:{t:"Concevoir une Antenne Dipole 5 GHz sous HFSS",m:"Ingenierie RF - ANSYS HFSS - Electromagnetisme",
+    b:"<h3>Pourquoi 5 GHz?</h3><p>La bande 5 GHz est utilisee par le Wi-Fi 5 (802.11ac) et le Wi-Fi 6 (802.11ax). Concevoir des antennes pour cette bande est une competence precieuse en ingenierie reseau sans fil.</p><h3>Le principe quart d'onde</h3><p>Une antenne dipole quart d'onde resonne quand sa longueur est egale a lambda/4. A 5 GHz, lambda = 60 mm, donc l'element fait 15 mm. A la resonance, l'impedance est purement resistive.</p><h3>Modelisation sous HFSS</h3><p>L'antenne est un cylindre sur l'axe Z. Un gap d'excitation de 1mm est cree par soustraction d'un cylindre duplique. La section definit le port localise - point de connexion du generateur.</p><h3>Lecture des resultats</h3><p>Le diagramme de rayonnement montre la distribution du gain - forme toroidale omnidirectionnelle. Le diagramme de Smith: un point au centre = adaptation parfaite a 50 ohms. S11 doit etre sous -10 dB a la resonance.</p>"}
+  },
+  aa3:{
+    en:{t:"Deploy Jitsi Meet on Ubuntu 22.04 in 7 Steps",m:"Self-Hosting - Linux - Nginx - TLS",
+    b:"<h3>Why Self-Host?</h3><p>Jitsi Meet is open-source and GDPR-friendly. Self-hosting means your streams never pass through third-party servers - essential for organizations with confidentiality requirements.</p><h3>Prerequisites</h3><p>A VPS running Ubuntu 22.04, a public IP, a domain name pointing to that IP, and ports 80, 443, 10000/UDP, 3478/UDP, 5349/TCP open on your firewall.</p><h3>Why Nginx?</h3><p>Nginx acts as reverse proxy in front of Jitsi's internal services (Prosody XMPP, Jicofo, Jitsi Videobridge). It handles TLS termination and routes requests. Jitsi's installer creates the Nginx vhost configuration automatically.</p><h3>Why Let's Encrypt?</h3><p>TLS is mandatory for WebRTC. Without a valid certificate, browsers block microphone and camera access. Let's Encrypt provides free, auto-renewable 90-day certificates trusted by all major browsers.</p><h3>Performance</h3><p>For ~30 participants: 4 vCPUs and 8 GB RAM. The Jitsi Videobridge handles all media routing and is the most resource-intensive component. For larger deployments, multiple JVB instances can be load-balanced.</p>"},
+    fr:{t:"Deployer Jitsi Meet sur Ubuntu 22.04 en 7 Etapes",m:"Auto-hebergement - Linux - Nginx - TLS",
+    b:"<h3>Pourquoi auto-heberger?</h3><p>Jitsi Meet est open-source et conforme RGPD. L'auto-hebergement signifie que vos flux ne transitent pas par des serveurs tiers - essentiel pour les organisations avec des exigences de confidentialite.</p><h3>Prerequis</h3><p>VPS Ubuntu 22.04, IP publique, domaine pointant vers cette IP, ports 80, 443, 10000/UDP, 3478/UDP ouverts.</p><h3>Pourquoi Nginx?</h3><p>Nginx agit en reverse proxy devant les services internes de Jitsi. Il gere la terminaison TLS et route les requetes. L'installateur Jitsi cree automatiquement la config Nginx.</p><h3>Pourquoi Let's Encrypt?</h3><p>Le TLS est obligatoire pour WebRTC. Sans certificat valide, les navigateurs bloquent le micro et la camera. Let's Encrypt fournit des certificats gratuits et auto-renouvelables de 90 jours.</p><h3>Performance</h3><p>Pour ~30 participants: 4 vCPUs et 8 Go RAM. Le Jitsi Videobridge gere tout le routage media et est le composant le plus gourmand en ressources.</p>"}
+  }
+};
+function openM(id){
+  var d=MD[id]; if(!d)return;
+  var v=d[lang]||d['en'];
+  document.getElementById('mc').innerHTML='<h2>'+v.t+'</h2><div class="mmeta">'+v.m+'</div><div class="mbody">'+v.b+'</div>';
+  document.getElementById('mov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeM(){
+  document.getElementById('mov').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeOut(e){if(e.target===document.getElementById('mov'))closeM();}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeM();});
+// CURSOR
+var cur=document.getElementById('cur');
+var dot=cur.querySelector('.cdot');
+var ring=cur.querySelector('.cring');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+(function tick(){
+  dot.style.left=mx+'px';dot.style.top=my+'px';
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(tick);
+})();
+// NETWORK CANVAS
+var C=document.getElementById('bg'),X=C.getContext('2d');
+var W,H,N=[],P=[];
+function rsz(){W=C.width=innerWidth;H=C.height=innerHeight;}
+rsz();window.addEventListener('resize',function(){rsz();ini();});
+function ini(){
+  N=[];for(var i=0;i<50;i++)N.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});
+  P=[];
+}
+function spk(){
+  for(var a=0;a<25;a++){
+    var i=N[Math.random()*N.length|0],j=N[Math.random()*N.length|0];
+    if(i===j)continue;
+    var d=Math.sqrt((j.x-i.x)*(j.x-i.x)+(j.y-i.y)*(j.y-i.y));
+    if(d<155){P.push({ax:i.x,ay:i.y,bx:j.x,by:j.y,t:0,s:.014+Math.random()*.009});break;}
+  }
+}
+function drw(){
+  X.clearRect(0,0,W,H);
+  for(var i=0;i<N.length;i++)for(var j=i+1;j<N.length;j++){
+    var dx=N[j].x-N[i].x,dy=N[j].y-N[i].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<155){X.beginPath();X.strokeStyle='rgba(0,180,255,'+(1-d/155)*.3+')';X.lineWidth=.55;X.moveTo(N[i].x,N[i].y);X.lineTo(N[j].x,N[j].y);X.stroke();}
+  }
+  N.forEach(function(n){
+    X.beginPath();X.arc(n.x,n.y,n.r,0,Math.PI*2);X.fillStyle='rgba(0,212,255,.45)';X.fill();
+    X.beginPath();X.arc(n.x,n.y,n.r+3,0,Math.PI*2);X.fillStyle='rgba(0,212,255,.07)';X.fill();
+  });
+  P=P.filter(function(p){return p.t<=1;});
+  P.forEach(function(p){
+    p.t+=p.s;
+    var x=p.ax+(p.bx-p.ax)*p.t,y=p.ay+(p.by-p.ay)*p.t;
+    X.beginPath();X.arc(x,y,2.8,0,Math.PI*2);X.fillStyle='rgba(0,255,157,.85)';X.fill();
+    X.beginPath();X.arc(x,y,6,0,Math.PI*2);X.fillStyle='rgba(0,255,157,.12)';X.fill();
+  });
+  N.forEach(function(n){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;});
+  requestAnimationFrame(drw);
+}
+ini();drw();setInterval(spk,280);
+// SCROLL REVEAL
+// rootMargin:'0px 0px -50px 0px' triggers slightly before element reaches bottom of viewport
+// This fixes cases where elements are already partially visible on load
+var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('vis');});},{threshold:0,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.tli').forEach(function(el){io.observe(el);});
+// Also immediately show any .tli already in viewport on page load
+setTimeout(function(){
+  document.querySelectorAll('.tli').forEach(function(el){
+    var r=el.getBoundingClientRect();
+    if(r.top < window.innerHeight && r.bottom > 0) el.classList.add('vis');
+  });
+},100);
+// SKILL BARS
+var bo=new IntersectionObserver(function(e){e.forEach(
